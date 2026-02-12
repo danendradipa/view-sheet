@@ -1,8 +1,8 @@
-import { CheckCircle2, XCircle, Info } from "lucide-react";
+import { CheckCircle2, XCircle, Info, AlertTriangle } from "lucide-react";
 import { cn } from "../../utils/cn";
 
 interface AlertProps {
-  type: "error" | "success" | "info";
+  type: "error" | "success" | "info" | "warning";
   message: string;
   onClose?: () => void;
   className?: string;
@@ -17,29 +17,38 @@ export default function Alert({
   const configs = {
     error: {
       icon: XCircle,
-      styles: "bg-red-50 border-red-200 text-red-700",
-      iconColor: "text-red-600",
+      styles:
+        "bg-red-50 border-red-200 text-red-900 dark:bg-red-900/20 dark:border-red-900/50 dark:text-red-200",
+      iconColor: "text-red-600 dark:text-red-400",
     },
     success: {
       icon: CheckCircle2,
-      styles: "bg-emerald-50 border-emerald-200 text-emerald-700",
-      iconColor: "text-emerald-600",
+      styles:
+        "bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-900/20 dark:border-emerald-900/50 dark:text-emerald-200",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
     },
     info: {
       icon: Info,
-      styles: "bg-slate-50 border-slate-200 text-slate-700",
-      iconColor: "text-slate-500",
+      styles:
+        "bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-900/20 dark:border-blue-900/50 dark:text-blue-200",
+      iconColor: "text-blue-600 dark:text-blue-400",
+    },
+    warning: {
+      icon: AlertTriangle,
+      styles:
+        "bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-900/20 dark:border-amber-900/50 dark:text-amber-200",
+      iconColor: "text-amber-600 dark:text-amber-400",
     },
   };
 
-  const config = configs[type];
+  const config = configs[type] || configs.info;
   const Icon = config.icon;
 
   return (
     <div
       role="alert"
       className={cn(
-        "flex items-start gap-3 p-4 rounded-lg border shadow-sm transition-all duration-300 animate-in fade-in slide-in-from-top-2",
+        "flex items-start gap-3 p-4 rounded-xl border shadow-sm transition-all duration-300 animate-in fade-in slide-in-from-top-2",
         config.styles,
         className
       )}
@@ -52,7 +61,8 @@ export default function Alert({
         <button
           onClick={onClose}
           className={cn(
-            "shrink-0 rounded-md p-1 opacity-70 hover:opacity-100 hover:bg-black/5 transition-all",
+            "shrink-0 rounded-md p-1 opacity-70 hover:opacity-100 transition-all",
+            "hover:bg-black/5 dark:hover:bg-white/10",
             config.iconColor
           )}
           aria-label="Close alert"
