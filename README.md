@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+**ViewSheet**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Minimalist spreadsheet file previewer built with React + TypeScript and Tailwind CSS. Designed to quickly preview CSV, TSV and JSON files with a clean, neutral UI and useful controls (column selection, wrap text, pagination, dark mode).
 
-Currently, two official plugins are available:
+**Quick Start**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Install:** Install dependencies (run once)
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm install react-router-dom papaparse lucide-react clsx
+npm install -D @types/papaparse
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Run (development):**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+- **Build:**
+
+```bash
+npm run build
+```
+
+**Tech Stack**
+
+- **Framework:** React (Vite) + TypeScript
+- **Styling:** Tailwind CSS
+- **Routing:** React Router v6
+- **Parsing:** PapaParse for CSV/TSV
+- **Icons:** Lucide React
+- **State:** React Context API (file handling, theme)
+
+**Main Features**
+
+- Drag & drop file upload (CSV / TSV / JSON)
+- Fast parsing and preview of tabular data
+- Column selector (show/hide columns + select/deselect all)
+- Row index column toggle
+- Wrap text toggle and sensible min-widths to enable horizontal scrolling
+- Pagination for large datasets (defaults to 50 rows/page)
+- Dark / light theme with persistence in `localStorage`
+
+**Project Structure (key folders)**
+
+- `src/components` — shared UI components (ui, layout, common)
+- `src/features/file-viewer` — file viewer feature: components + hooks
+- `src/context` — global providers (FileContext, ThemeProvider)
+- `src/pages` — routed pages (`Home`, `Preview`)
+- `src/utils` — helpers
+
+**Important files**
+
+- `src/context/ThemeProvider.tsx` — theme provider + `useTheme` hook (persists to `localStorage`)
+- `src/context/FileContext.tsx` — file parsing provider
+- `src/features/file-viewer/components/FileUploader.tsx` — drag/drop input
+- `src/features/file-viewer/components/DataGrid.tsx` — table + pagination + column selector
+- `src/components/ui/Table.tsx` — table rendering (supports wrap and index column)
+
+**Notes & UX decisions**
+
+- The table uses `min-w` and horizontal scrolling so selecting many columns does not compress content into unreadable widths.
+- Text wrapping is opt-in and can be toggled per preview to accomodate very long text fields (e.g. scraped `full_text`).
+- Theme is stored under `localStorage.theme` and initialized synchronously to avoid flash/overwrite on refresh.
+
+**Troubleshooting**
+
+- If theme resets on refresh, ensure `src/context/ThemeProvider.tsx` initializes theme from `localStorage` synchronously (the project includes that logic).
+- If CSV parsing fails for malformed files, PapaParse returns errors; the UI surface shows an alert with the parse error.
+
+**Next Improvements (suggested)**
+
+- Persist visible column selection and wrap preference to `localStorage` per file
+- Add CSV export of currently visible subset
+- Add column resizing
